@@ -82,6 +82,7 @@ class MyRingTopo (Topo) :
 		self.add_edge(midRightSwitch,bottomRightSwitch)
 		self.add_edge(bottomRightSwitch,bottomLeftSwitch)
 		self.add_edge(bottomLeftSwitch,midLeftSwitch)
+		self.add_edge(midLeftSwitch,topSwitch)
 
 		self.enable_all();
 

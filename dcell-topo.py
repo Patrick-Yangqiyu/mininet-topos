@@ -59,10 +59,13 @@ class DCellTopo (Topo) :
 		i = 0
 		revprefix = prefix[::-1]
 		for value in revprefix :
+			if i==LEVEL+1:
+				break
 			if i == 0:
 				uid = uid + value
 			else :
-				uid = uid + (value * getT(i-1))
+				uid = uid + (value * self.getT(i-1))
+			i = i + 1
 		return uid
 
 	def __init__(self,enable_all=True):

@@ -4,7 +4,6 @@ author: Narendran Thangarajan (narendran.thangarajan@gmail.com)
 """
 
 from mininet.topo import Topo, Node
-import md5
 
 LEVEL = 1
 N = 4
@@ -33,18 +32,12 @@ class DCellTopo (Topo) :
 			"TODO modularize node creation"
 			print prefix
 			print " Dcell0 in progress"
-			prefixstring ="";
-			for value in prefix:
-				prefixstring = prefixstring + str(value)
-			nodes[prefix] = md5.new(prefixstring).digest();
+			nodes[prefix] = self.getUID(prefix) + 10000
 			self.add_node(nodes[prefix], Node(is_switch=True))
 			" Create the DCell nodes"
 			for i in xrange(0,N):
 				newprefix = prefix.__add__((i,))
-				newprefixstring ="";
-				for value in newprefix:
-					newprefixstring = newprefixstring + str(value)
-				nodes[newprefix] = md5.new(newprefixstring).digest();
+				nodes[newprefix] = self.getUID(newprefix)
 				self.add_node(nodes[newprefix], Node(is_switch=False))
 				self.add_edge(nodes[prefix],nodes[newprefix])
 				print newprefix
@@ -59,12 +52,24 @@ class DCellTopo (Topo) :
 		for i in xrange(0,self.getT(l-1)):
 			for j in xrange(i+1,self.getG(l)):
 				self.add_edge(nodes[pref.__add__((i,)).__add__((j-1,))],nodes[pref.__add__((j,)).__add__((i,))])
-				
+					
+
+	def getUID(self,prefix):
+		uid = 0
+		i = 0
+		revprefix = prefix[::-1]
+		for value in revprefix :
+			if i == 0:
+				uid = uid + value
+			else :
+				uid = uid + (value * getT(i-1))
+		return uid
 
 	def __init__(self,enable_all=True):
 		"Call Super constructor"
 		super(DCellTopo,self).__init__();
 		self.buildDCells(pref,LEVEL)
+		self.enable_all();
 		# print self.getG(3);
 
 

@@ -9,6 +9,7 @@ LEVEL = 1
 N = 4
 pref = (198,)
 nodes = {}
+hosts = {}
 class DCellTopo (Topo) :
 	
 	"DCell Topology - Main function gets a network prefix and level"
@@ -37,9 +38,13 @@ class DCellTopo (Topo) :
 			" Create the DCell nodes"
 			for i in xrange(0,N):
 				newprefix = prefix.__add__((i,))
-				nodes[newprefix] = self.getUID(newprefix)
-				self.add_node(nodes[newprefix], Node(is_switch=False))
+				" Converting a host into a host+switch combo to mock routing in hosts in DCell topology "
+				nodes[newprefix] = self.getUID(newprefix) + 20000
+				self.add_node(nodes[newprefix], Node(is_switch=True))
 				self.add_edge(nodes[prefix],nodes[newprefix])
+				hosts[newprefix] = self.getUID(newprefix)
+				self.add_node(hosts[newprefix], Node(is_switch=False))
+				self.add_edge(nodes[newprefix],hosts[newprefix])
 				print newprefix
 				print " Server in progress"
 			return
